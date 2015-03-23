@@ -33,7 +33,7 @@ RUN apt-get update \
                              subversion \
                              atfs \
     && apt-get install -y -q --no-install-recommends mercurial \
-    && apt-get clean && /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 # For example: you could install your app requirements with your

@@ -1,12 +1,14 @@
-from fabric.api import env, run
+from fabric.api import env, run, task, local
 from dockerfabric.apiclient import docker_fabric
 from dockermap.api import DockerClientWrapper, MappingDockerClient
 from continuity import bootstrap_environment
 from continuity import tasks as continuity
 
-@bootstrap_environment('production')
+@task
 def production():
     """Remote production environment"""
+    bootstrap_environment('production')
+    env.project_path = '/home/{user}/jenkins-test'.format(**env)
     env.forward_agent = True
     env.docker = docker_fabric()
     env.run = run
@@ -15,9 +17,11 @@ def production():
     }
 
 
-@bootstrap_environment('development')
+@task
 def development():
     """Remote staging/development environment"""
+    bootstrap_environment('development')
+    env.project_path = '/home/{user}/jenkins-test'.format(**env)
     env.forward_agent = True
     env.docker = docker_fabric()
     env.run = run
@@ -25,14 +29,18 @@ def development():
         'web': ['{user}@{site_url}'.format(**env)],
     }
 
-@bootstrap_environment('testing')
+@task
 def testing():
     """Local testing environment"""
+    bootstrap_environment('testing')
+    env.project_path = '/home/{user}/jenkins-test'.format(**env)
     env.docker = DockerClientWrapper('unix://var/run/docker.sock')
     env.run = local
 
-@bootstrap_environment('local')
+@task
 def locally():
     """Local development environment"""
+    bootstrap_environment('local')
+    env.project_path = '/home/{user}/jenkins-test'.format(**env)
     env.docker = DockerClientWrapper('unix://var/run/docker.sock')
     env.run = local

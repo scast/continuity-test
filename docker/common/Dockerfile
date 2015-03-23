@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y -q libjpeg-dev \
     && add-apt-repository ppa:chris-lea/node.js -y \
     && apt-get update \
     && apt-get install -y -q nodejs \
-    && apt-get clean && /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 
