@@ -1,0 +1,61 @@
+common:
+  watch:
+    - docker/common/Dockerfile
+    - requirements/base.txt
+
+  build:
+    tag: jenkins-test:common
+    dockerfile: docker/common/Dockerfile
+    nocache: True
+    rm: True
+
+production:
+  depends: common
+
+  watch:
+    - docker/production/Dockerfile
+    - requirements/production.txt
+
+  build:
+    tag: jenkins-test:production
+    dockerfile: docker/production/Dockerfile
+    nocache: True
+    rm: True
+
+development:
+  depends: production
+
+  watch:
+    - docker/development/Dockerfile
+
+  build:
+    tag: jenkins-test:development
+    dockerfile: docker/development/Dockerfile
+    nocache: True
+    rm: True
+
+local:
+  depends: common
+
+  watch:
+    - docker/local/Dockerfile
+    - requirements/local.txt
+
+  build:
+    tag: jenkins-test:local
+    dockerfile: docker/local/Dockerfile
+    nocache: True
+    rm: True
+
+testing:
+  depends: common
+
+  watch:
+    - docker/testing/Dockerfile
+    - requirements/local.txt
+
+  build:
+    tag: jenkins-test:testing
+    dockerfile: docker/testing/Dockerfile
+    nocache: True
+    rm: True

@@ -1,0 +1,130 @@
+
+name: jenkins-test
+settings: &settings
+  project_name: jenkins-test
+  remote_ref: origin/master
+  working_ref: origin/development
+  containers:
+    - web
+
+common: &common
+  postgres:
+    image: /postgres
+    uses:
+      - db-data
+  db-data:
+    image: /busybox
+    shares:
+      - postgres_data
+
+  redis:
+    image: /redis
+
+  volumes:
+    postgres_data: /var/lib/postgresql/data
+    app_data: /app
+
+  host:
+    app_data: .
+
+production: &production
+  <<: *common
+
+  settings:
+    <<: *settings
+    site_url: example.com
+    user: jenkins-test
+
+  web:
+    image: /jenkins-test:production
+
+    binds:
+      - app_data
+
+    links:
+      - postgres
+      - redis
+
+    start_options:
+      - restart_policy: always
+      - port_bindings: {7100: 80}
+
+    create_options:
+      - command: /app/docker/entrypoints/web.sh
+      - detach: True
+      - working_dir: /app
+      - environment: {}
+
+development: &development
+  <<: *production
+
+  settings:
+    <<: *settings
+    site_url: dev.example.com
+    user: jenkins-test
+
+  web:
+    image: /jenkins-test:development
+
+    binds:
+      - app_data
+
+    links:
+      - postgres
+      - redis
+
+    start_options:
+      - restart_policy: always
+      - port_bindings: {7100: 80}
+
+    create_options:
+      - command: /app/docker/entrypoints/web.sh
+      - detach: True
+      - working_dir: /app
+      - environment: {}
+
+local:
+  <<: *common
+
+  web:
+    image: /jenkins-test:local
+
+    binds:
+      - app_data
+
+    links:
+      - postgres
+      - redis
+
+    start_options:
+      - restart_policy: always
+      - port_bindings: {7100: 80}
+
+    create_options:
+      - command: /app/docker/entrypoints/local.sh
+      - detach: True
+      - working_dir: /app
+      - environment: {}
+
+testing:
+  <<: *common
+
+  runner:
+    image: /jenkins-test:testing
+
+    binds:
+      - app_data
+
+    links:
+      - postgres
+      - redis
+
+    start_options:
+      - restart_policy: always
+      - port_bindings: {7100: 80}
+
+    create_options:
+      - command: /app/docker/entrypoints/runner.sh
+      - detach: True
+      - working_dir: /app
+      - environment: {}
