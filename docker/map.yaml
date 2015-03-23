@@ -46,14 +46,14 @@ production: &production
       - redis
 
     start_options:
-      - restart_policy: always
-      - port_bindings: {7100: 80}
+      restart_policy: always
+      port_bindings: {7100: 80}
 
     create_options:
-      - command: /app/docker/entrypoints/web.sh
-      - detach: True
-      - working_dir: /app
-      - environment: {}
+      command: /app/docker/entrypoints/web.sh
+      detach: True
+      working_dir: /app
+      environment: {}
 
 development: &development
   <<: *production
@@ -74,14 +74,14 @@ development: &development
       - redis
 
     start_options:
-      - restart_policy: always
-      - port_bindings: {7100: 80}
+      restart_policy: always
+      port_bindings: {7100: 80}
 
     create_options:
-      - command: /app/docker/entrypoints/web.sh
-      - detach: True
-      - working_dir: /app
-      - environment: {}
+      command: /app/docker/entrypoints/web.sh
+      detach: True
+      working_dir: /app
+      environment: {}
 
 local:
   <<: *common
@@ -100,14 +100,14 @@ local:
       - redis
 
     start_options:
-      - restart_policy: always
-      - port_bindings: {7100: 80}
+      restart_policy: always
+      port_bindings: {7100: 80}
 
     create_options:
-      - command: /app/docker/entrypoints/local.sh
-      - detach: True
-      - working_dir: /app
-      - environment: {}
+      command: /app/docker/entrypoints/local.sh
+      detach: True
+      working_dir: /app
+      environment: {}
 
 testing:
   <<: *common
@@ -126,11 +126,10 @@ testing:
       - redis
 
     start_options:
-      - restart_policy: always
-      - port_bindings: {7100: 80}
+      port_bindings: {7100: 80}
 
     create_options:
-      - command: /app/docker/entrypoints/runner.sh
-      - detach: True
-      - working_dir: /app
-      - environment: {}
+      command: /app/docker/entrypoints/runner.sh
+      detach: True
+      working_dir: /app
+      environment: {}
